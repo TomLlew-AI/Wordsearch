@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <array>
-#include "funcs.hpp" // This is where all the functions are!
+#include "funcs.hpp" // This is where all the functions are
 
 // Variable initialisation
 
@@ -29,27 +29,46 @@ int directions = 8;
 
 // Our program starts in the main function
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    // The settings below can be configured to your liking!
-    const int width = 20; // The width of the wordsearch
-    const int height = 20; // The height of the wordsearch
-    std::vector<std::string>words = {"English", "Spanish", "Businessstudies", "Maths", "Physics", "Chemistry", "Biology",
-    "Economics", "Art", "Music", "PhysicalEducation", "Tourism", "Citizenship", "MarineScience", "ComputerScience", "Science"};
-    // A vector of words to be placed in the wordsearch
-    /* Be aware that to run after changing these settings, follow these steps:
-    Make sure that you are in the Generator directory by typing: cd Generator!
-    1. Type this in the terminal to compile: g++ -std=c++11 main.cpp -o generator
-    2. Then execute: ./generator
-    */
+    // Set up the arguments needed to generate the wordsearch defined by the user
 
+    int width; // Width of the wordsearch
+    int height; // Height of the wordsearch
+
+    // Ensure that enough arguments must be entered
+    if (argc < 4) {
+        std::cout << "Not enough arguments" << std::endl;
+        return 1;
+    }
+
+    try {
+        width = std::stoi(argv[1]);
+        height = std::stoi(argv[2]);
+        if (width <= 0 || height <= 0) {
+            std::cout << "Width and height must be positive integers" << std::endl;
+            return 1;
+        }
+    } catch (std::invalid_argument &e) {
+        std::cout << "Invalid argument: " << argv[1] << " or " << argv[2] << std::endl;
+        return 1;
+    }
+
+    // Add the words entered by the user
+    std::vector<std::string>words;
+
+    for (int i = 3; i < argc; i++) {
+        words.push_back(argv[i]);
+    }
+
+    // Convert the words to uppercase
     for (std::string &word : words) {
         word = get_upper(word);
     }
 
-    char displayed_chars[width][height];
+    std::vector<std::vector<char>>displayed_chars(width, std::vector<char>(height));
 
-    // Implementing the alphabet into possible_chars array
+    // Implementing the letters from the English alphabet into possible_chars array
 
     for (int i = 0; i < 26; i++) {
         possible_chars[i] = (char)i + 65;
@@ -58,10 +77,13 @@ int main() {
     // Set up the available spaces
 
      // A matrix of all the spaces
-    std::array<std::array<std::array<int, 2>, width>, height>available_spaces;
+    std::vector<std::vector<std::array<int, 2>>> available_spaces(
+        height,
+        std::vector<std::array<int, 2>>(width)
+    );
 
     // A boolean matrix deciding whether that space is available
-    std::array<std::array<bool, width>, height>bool_available_spaces;
+    std::vector<std::vector<bool>>bool_available_spaces(height, std::vector<bool>(width));
 
     // Implement the spaces
     for (int row = 0; row < height; row++) {
