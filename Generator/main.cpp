@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
         word = get_upper(word);
     }
 
-    std::vector<std::vector<char>>displayed_chars(width, std::vector<char>(height));
+    std::vector<std::vector<char>>displayed_chars(height, std::vector<char>(width));
 
     // Implementing the letters from the English alphabet into possible_chars array
 
