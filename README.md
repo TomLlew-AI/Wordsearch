@@ -16,7 +16,6 @@
     <ul>
       <li>./generator_exec 5 7 Cat Dog Rat</li>
     </ul>
-    <li>Currently there is a bug where only the height and width must be the same. This will be fixed in the future.</li>
   </ul>
   
   </li>
